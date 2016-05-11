@@ -21,6 +21,7 @@ im2, contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPRO
 
 numBins = 4
 imhsv = cv2.cvtColor(im,cv2.COLOR_BGR2HSV)
+		
 
 for cnt in contours:
 	area = cv2.contourArea(cnt)
@@ -44,11 +45,8 @@ for cnt in contours:
 				 int(color[0][0][1]),
 				 int(color[0][0][2]))
 
-		print cv2.mean(im,mask = mask)
-		print color
 
-
-		cv2.drawContours(im, [cnt], 0, color, -1)
+		cv2.drawContours(im, [cnt], 0, color, 3)
 
 cv2.imshow("contours",im)
 cv2.waitKey(0)
