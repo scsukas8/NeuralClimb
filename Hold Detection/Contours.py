@@ -20,7 +20,7 @@ ret,thresh = cv2.threshold(imgray,127,255,0)
 im2, contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
 numBins = 4
-imhsv = cv2.cvtColor(im,cv2.COLOR_BGR2HSV)
+imlab = cv2.cvtColor(im,cv2.COLOR_BGR2LAB)
 		
 
 for cnt in contours:
@@ -33,20 +33,19 @@ for cnt in contours:
 
 		mask = np.zeros(imgray.shape,np.uint8)
 		cv2.drawContours(mask,[cnt],0,255,-1)
-		meanColor = cv2.mean(imhsv,mask = mask)
+		meanColor = cv2.mean(imlab,mask = mask)
 
 
 		meanColor = np.uint8([[[meanColor[0],
 								meanColor[1],
 						   	 	meanColor[2]]]])
 		
-		color = cv2.cvtColor(np.array(meanColor),cv2.COLOR_HSV2BGR)
+		color = cv2.cvtColor(np.array(meanColor),cv2.COLOR_LAB2BGR)
 		color = (int(color[0][0][0]),
 				 int(color[0][0][1]),
 				 int(color[0][0][2]))
 
-
-		cv2.drawContours(im, [cnt], 0, color, 3)
+		cv2.drawContours(im, [cnt], 0, color, -1)
 
 cv2.imshow("contours",im)
 cv2.waitKey(0)
