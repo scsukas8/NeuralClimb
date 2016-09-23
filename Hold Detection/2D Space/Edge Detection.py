@@ -10,12 +10,12 @@ def buildDetector():
 
 	# Change thresholds
 	params.minThreshold = 0
-	params.maxThreshold = 150
+	params.maxThreshold = 255
 
 
 	# Filter by Area.
 	params.filterByArea = True
-	params.minArea = 15
+	params.minArea = 80
 
 	# Filter by Circularity
 	params.filterByCircularity = True
@@ -53,17 +53,22 @@ img = cv2.resize(img, (y,x))
 
 
 
-edges = cv2.Canny(img,300,500)
+edges = cv2.Canny(img,250,300)
 
 
 contours, hierarchy = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
 mask = np.zeros(img.shape,np.uint8)
 
-print size(contours)
-		
+cnt = [cnt for cnt in contours if cv2.contourArea(cnt) > 10]
 
-cv2.drawContours(mask,contours,-1,[255,0,0])
+
+hulls = map(cv2.convexHull,cnt)
+
+
+
+cv2.drawContours(mask,hulls,-1,[255,0,0])
+
 
 
 #plt.imshow(imgray)
