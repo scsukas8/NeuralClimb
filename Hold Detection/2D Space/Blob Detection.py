@@ -3,7 +3,7 @@ This python script takes in an image of a rock climbing wall
 and identifies all holds on that wall in addition to their color.
 
 This script uses a few non-default add ons including:
-OpenCV 3.0, numpy, matplotlib, and Pillow
+OpenCV 2.4.11, numpy, matplotlib, and Pillow
 '''
 
 import numpy as np
