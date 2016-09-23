@@ -12,3 +12,4 @@ def openFile():
 
 def showim(title, im):
 	cv2.imshow(title,im )
+	cv2.waitKey(0)
