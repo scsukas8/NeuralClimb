@@ -13,7 +13,6 @@ def openImage():
     # Open Image
     file_path = openFile()
     img = cv2.imread(file_path,1)
-    #img = cv2.imread('Image3.jpg',1)
 
     # Image can be resized to a resonable size to fit screen and
     # speed up processing.
@@ -73,7 +72,6 @@ def findHolds(img):
     # This should be modified to adapt to different settings.
     edges = cv2.Canny(blur,100,250)
 
-
     # Finds the contours of the image, without retaining the hierarchy
     contours, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
@@ -88,8 +86,30 @@ def findHolds(img):
     mask = np.zeros(img.shape,np.uint8)
     cv2.drawContours(mask,hulls,-1,[255,0,0])
 
+    #######################################
+    #OpenCV uses BGR format, so that'll need to be reversed for display
+    imsho = edges
+    cv2.imshow("Edges",edges)
 
 
+
+    mas = np.zeros(img.shape,np.uint8)
+    cv2.drawContours(mas,cnt,-1,[255,0,0])
+
+    #OpenCV uses BGR format, so that'll need to be reversed for display
+    imsho = mas[...,::-1]
+
+    # Display the resulting frame
+    fig = plt.figure()
+    plt.imshow(imsho)
+    plt.title("Contours")
+
+    imsho = mask[...,::-1]
+    fig = plt.figure()
+    plt.imshow(imsho)
+    plt.title("Hulls")
+    fig = plt.figure()
+    #######################################
 
     # Set up the detector with default parameters.
     detector = buildDetector()
@@ -151,14 +171,22 @@ def draw(img, keypoints):
     # Draw detected blobs as red circles.
     # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the 
     # size of the circle corresponds to the size of blob
-    im_with_keypoints = cv2.drawKeypoints(img, keypoints, np.array([]),
-     (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    for i, key in enumerate(keypoints):
+        x = int(key.pt[0])
+        y = int(key.pt[1])
+
+        size = int(math.ceil(key.size)) 
+
+        #Finds a rectangular window in which the keypoint fits
+        br = (x + size, y + size)   
+        tl = (x - size, y - size)
+        cv2.rectangle(img,tl,br,(0,0,255),2)
 
     #OpenCV uses BGR format, so that'll need to be reversed for display
-    im_with_keypoints = im_with_keypoints[...,::-1]
+    img = img[...,::-1]
 
     # Display the resulting frame
-    fig = plt.imshow(im_with_keypoints)
+    fig = plt.imshow(img)
     plt.title("Image with Keypoints")
 
 
