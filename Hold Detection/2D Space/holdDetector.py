@@ -68,9 +68,19 @@ def findHolds(img):
     # color of each hold to make it more uniform.
     blur = cv2.medianBlur(img,11)
 
+    # Using Otsu's method, the optimal threshold for the image can be found.
+    gray = cv2.cvtColor(blur,cv2.COLOR_BGR2GRAY)
+    otsu, _ = cv2.threshold(gray,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+
+
     # Applys edge detection to find the borders between the hold and the wall
-    # This should be modified to adapt to different settings.
-    edges = cv2.Canny(blur,100,250)
+    # Note: Otsu's threshold is normal intended to be used as the higher 
+    #   threshold. However, better results have been found from the opposite.
+    #   The recommended ratio of 1:2 is still maintained. L2gradient is 
+    #   included for more precise results.
+    edges = cv2.Canny(blur,otsu,otsu * 2, L2gradient = True)
+
 
     # Finds the contours of the image, without retaining the hierarchy
     contours, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
@@ -86,12 +96,11 @@ def findHolds(img):
     mask = np.zeros(img.shape,np.uint8)
     cv2.drawContours(mask,hulls,-1,[255,0,0])
 
+    """
     #######################################
     #OpenCV uses BGR format, so that'll need to be reversed for display
     imsho = edges
     cv2.imshow("Edges",edges)
-
-
 
     mas = np.zeros(img.shape,np.uint8)
     cv2.drawContours(mas,cnt,-1,[255,0,0])
@@ -110,6 +119,7 @@ def findHolds(img):
     plt.title("Hulls")
     fig = plt.figure()
     #######################################
+    """
 
     # Set up the detector with default parameters.
     detector = buildDetector()
@@ -193,30 +203,37 @@ def draw(img, keypoints):
 
 
 def plotColors(colors):
+
+    # Build 3D scatterplot
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.scatter([], [], [], c=[0,0,0], marker='o')
+    
+    # Initialize arrays
+    hs = []
+    ls = []
+    ss = []
 
-
-    rs = []
-    gs = []
-    bs = []
+    # Color data is mapped between 0 and 1
+    colors = colors/256
 
     for color in colors:
-        rs.append(color[0])
-        gs.append(color[1])
-        bs.append(color[2])
+        hs.append(color[0])
+        ls.append(color[1])
+        ss.append(color[2])
 
+    # Regain RGB Values to color each data point
+    colorsRGB = map(colorsys.hls_to_rgb,hs,ls,ss) 
 
-    ax.scatter(rs, gs, bs, c=colors/256.0, marker='o')
+    # Plot points in HLS space
+    ax.scatter(hs, ls, ss, c=colorsRGB, marker='o')
 
-    ax.set_xlabel('Red')
-    ax.set_ylabel('Green')
-    ax.set_zlabel('Blue')
+    ax.set_xlabel('Hue')
+    ax.set_ylabel('Lightness')
+    ax.set_zlabel('Saturation')
 
-    ax.set_xlim(0,255)
-    ax.set_ylim(0,255)
-    ax.set_zlim(0,255)
+    ax.set_xlim(0,1)
+    ax.set_ylim(0,1)
+    ax.set_zlim(0,1)
 
     plt.title("Color Space of Keypoints")
     plt.show()
