@@ -72,8 +72,6 @@ def findHolds(img):
     gray = cv2.cvtColor(blur,cv2.COLOR_BGR2GRAY)
     otsu, _ = cv2.threshold(gray,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
-
-
     # Applys edge detection to find the borders between the hold and the wall
     # Note: Otsu's threshold is normal intended to be used as the higher 
     #   threshold. However, better results have been found from the opposite.
