@@ -95,6 +95,7 @@ def findHolds(img):
     cv2.drawContours(mask,hulls,-1,[255,0,0])
 
     """
+    Uncomment this to display the image results of each step.
     #######################################
     #OpenCV uses BGR format, so that'll need to be reversed for display
     imsho = edges
@@ -123,7 +124,7 @@ def findHolds(img):
     detector = buildDetector()
 
     keypoints = detector.detect(mask)
-    return keypoints
+    return keypoints , hulls
 
 
 
