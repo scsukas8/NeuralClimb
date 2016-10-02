@@ -38,7 +38,7 @@ def buildDetector():
 
     # Filter by Area.
     params.filterByArea = True
-    params.minArea = 30
+    params.minArea = 500
 
     # Filter by Circularity
     params.filterByCircularity = False
@@ -66,7 +66,8 @@ def findHolds(img):
     # Applying a median blur removes some small impurities that
     # could fool the detection algorithm. It also smooths out the
     # color of each hold to make it more uniform.
-    blur = cv2.medianBlur(img,11)
+    blur = cv2.medianBlur(img,21)
+    blur2 = cv2.medianBlur(img,21)
 
     # Using Otsu's method, the optimal threshold for the image can be found.
     gray = cv2.cvtColor(blur,cv2.COLOR_BGR2GRAY)
@@ -77,11 +78,16 @@ def findHolds(img):
     #   threshold. However, better results have been found from the opposite.
     #   The recommended ratio of 1:2 is still maintained. L2gradient is 
     #   included for more precise results.
-    edges = cv2.Canny(blur,otsu,otsu * 2, L2gradient = True)
+    edges = cv2.Canny(blur,otsu / 2,otsu, L2gradient = True)
+    edges2 = cv2.Canny(blur2,otsu,otsu * 2, L2gradient = True)
+
 
 
     # Finds the contours of the image, without retaining the hierarchy
     contours, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+    contours2, _ = cv2.findContours(edges2,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+
+    contours = contours + contours2
 
     # Remove contours that are too small or have too few points.
     cnt = [cnt for cnt in contours if cv2.contourArea(cnt) > 10 and cnt.size > 5]
@@ -95,7 +101,7 @@ def findHolds(img):
     cv2.drawContours(mask,hulls,-1,[255,0,0])
 
     """
-    Uncomment this to display the image results of each step.
+    #Uncomment this to display the image results of each step.
     #######################################
     #OpenCV uses BGR format, so that'll need to be reversed for display
     imsho = edges
