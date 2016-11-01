@@ -157,8 +157,11 @@ def getColorBin(img, tl, br):
     return fullColor 
 
 def findColors(img,keypoints):
+    # If no keypoints return nothing
+    if (keypoints == []):
+        return []
 
-    #Shift colorspace to HLS
+    # Shift colorspace to HLS
     hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
 
     # Preallocate space for color array corresponding to keypoints
