@@ -20,6 +20,8 @@ while(True):
 
     colors = findColors(frame,keypoints)
 
+
+    im_with_keypoints = cv2.drawKeypoints(frame,keypoints,-1,[255,0,0])
     cv2.imshow('frame',im_with_keypoints)
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
