@@ -15,7 +15,8 @@ while(True):
     ret, frame = cap.read()
 
     #Find keypoints
-    keypoints = findHolds(frame)
+    keypoints, _ = findHolds(frame)
+
 
     colors = findColors(frame,keypoints)
 
