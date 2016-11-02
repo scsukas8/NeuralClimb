@@ -20,7 +20,8 @@ i = 0
 detector = buildDetector()
 
 
-
+# Define the codec and create VideoWriter object
+out = cv2.VideoWriter('results.avi',-1, 15.0, (568,320),True)
 
 while not (cap.isOpened()):
     i+=1
@@ -40,10 +41,13 @@ while not (cap.isOpened()):
 
     frameWithKeypoints = cv2.drawKeypoints(frame,keypoints,-1,[255,0,0])
     results = np.concatenate((frame, frameWithKeypoints), axis=0)
-    cv2.imshow('frame',results)
+    
+    out.write(frameWithKeypoints)
 
+    cv2.imshow('frame',results)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
+out.release()
 cv2.destroyAllWindows()
