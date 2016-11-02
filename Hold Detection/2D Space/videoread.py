@@ -32,7 +32,8 @@ while not (cap.isOpened()):
     #Find keypoints
     keypoints, _ = findHolds(frame,detector)
 
-    colors = findColors(frame,keypoints)
+    #colors = findColors(frame,keypoints)
+
 
 
     frameWithKeypoints = cv2.drawKeypoints(frame,keypoints,-1,[255,0,0])
