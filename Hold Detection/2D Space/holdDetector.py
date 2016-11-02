@@ -38,7 +38,7 @@ def buildDetector():
 
     # Filter by Area.
     params.filterByArea = True
-    params.minArea = 500
+    params.minArea = 20
 
     # Filter by Circularity
     params.filterByCircularity = False
@@ -62,39 +62,38 @@ def buildDetector():
     return detector
 
 
-def findHolds(img):
+def findHolds(img,detector = None):
     # Applying a median blur removes some small impurities that
     # could fool the detection algorithm. It also smooths out the
     # color of each hold to make it more uniform.
-    blur = cv2.medianBlur(img,21)
-    blur2 = cv2.medianBlur(img,21)
+    img = cv2.medianBlur(img,3)
+    #blur2 = cv2.medianBlur(blur,21)
 
     # Using Otsu's method, the optimal threshold for the image can be found.
-    gray = cv2.cvtColor(blur,cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     otsu, _ = cv2.threshold(gray,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
     # Applys edge detection to find the borders between the hold and the wall
-    # Note: Otsu's threshold is normal intended to be used as the higher 
-    #   threshold. However, better results have been found from the opposite.
-    #   The recommended ratio of 1:2 is still maintained. L2gradient is 
-    #   included for more precise results.
-    edges = cv2.Canny(blur,otsu / 2,otsu, L2gradient = True)
-    edges2 = cv2.Canny(blur2,otsu,otsu * 2, L2gradient = True)
+    # Otsu's threshold is intended to be used as the higher threshold with a
+    # lower:upper ratio of 1:2. L2gradient is included for more precise results.
+
+    edges = cv2.Canny(img,otsu/2, otsu, L2gradient = True)
+    #edges2 = cv2.Canny(img,100 ,200, L2gradient = True)
 
 
 
     # Finds the contours of the image, without retaining the hierarchy
-    contours, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
-    contours2, _ = cv2.findContours(edges2,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+    contours1, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+    #contours2, _ = cv2.findContours(edges2,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
-    contours = contours + contours2
+    #cnt = contours1 + contours2
 
     # Remove contours that are too small or have too few points.
-    cnt = [cnt for cnt in contours if cv2.contourArea(cnt) > 10 and cnt.size > 5]
+    #cnt = [x for x in cnt if x.size > 5]
 
     # Applies convex hulls to each contour, ensuring each contour
     # is a closed polygon.
-    hulls = map(cv2.convexHull,cnt)
+    hulls = map(cv2.convexHull,contours1)
 
     # Draws contours onto a blank canvas
     mask = np.zeros(img.shape,np.uint8)
@@ -104,6 +103,7 @@ def findHolds(img):
     #Uncomment this to display the image results of each step.
     #######################################
     #OpenCV uses BGR format, so that'll need to be reversed for display
+    fig = plt.figure(5)
     imsho = edges
     cv2.imshow("Edges",edges)
 
@@ -114,20 +114,20 @@ def findHolds(img):
     imsho = mas[...,::-1]
 
     # Display the resulting frame
-    fig = plt.figure()
+    fig = plt.figure(6)
     plt.imshow(imsho)
     plt.title("Contours")
 
     imsho = mask[...,::-1]
-    fig = plt.figure()
+    fig = plt.figure(7)
     plt.imshow(imsho)
     plt.title("Hulls")
-    fig = plt.figure()
+    fig = plt.figure(8)
     #######################################
     """
-
-    # Set up the detector with default parameters.
-    detector = buildDetector()
+    if detector == None:
+        # Set up the detector with default parameters.
+        detector = buildDetector()
 
     keypoints = detector.detect(mask)
     return keypoints , hulls
