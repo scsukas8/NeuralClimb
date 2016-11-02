@@ -19,13 +19,17 @@ print cap.isOpened()
 i = 0
 detector = buildDetector()
 
+
+
+
 while not (cap.isOpened()):
     i+=1
 
     file_path = "frames_" + "%04d" % i + ".png"
     print file_path
     frame = cv2.imread(file_path,1)
-
+    if frame == None:
+        break
 
 
 
@@ -33,8 +37,6 @@ while not (cap.isOpened()):
     keypoints, _ = findHolds(frame,detector)
 
     #colors = findColors(frame,keypoints)
-
-
 
     frameWithKeypoints = cv2.drawKeypoints(frame,keypoints,-1,[255,0,0])
     results = np.concatenate((frame, frameWithKeypoints), axis=0)
