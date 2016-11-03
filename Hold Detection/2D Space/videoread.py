@@ -7,23 +7,19 @@ from holdDetector import findHolds, findColors, plotColors, buildDetector
 import os.path
 import time
 #cap = cv2.VideoCapture(0)
-path = "C:/Users/SeanC/Documents/GitHub/NeuralClimb/Hold Detection/2D Space/StopMoti2001.mpeg"
+#path = "C:/Users/SeanC/Documents/GitHub/NeuralClimb/Hold Detection/2D Space/results.avi"
 
-abspath =  os.path.abspath(path)
-print os.path.exists(abspath)
-print abspath
-cap = cv2.VideoCapture(abspath)
-
-print cap.isOpened()
+#abspath =  os.path.abspath(path)
+#cap = cv2.VideoCapture(abspath)
 
 i = 0
 detector = buildDetector()
 
 
 # Define the codec and create VideoWriter object
-out = cv2.VideoWriter('results.avi',-1, 15.0, (568,320),True)
+out = cv2.VideoWriter('results.avi',-1, 15.0, (568,640),True)
 
-while not (cap.isOpened()):
+while (True):
     i+=1
 
     file_path = "frames_" + "%04d" % i + ".png"
@@ -39,15 +35,15 @@ while not (cap.isOpened()):
 
     #colors = findColors(frame,keypoints)
 
-    frameWithKeypoints = cv2.drawKeypoints(frame,keypoints,-1,[255,0,0])
+    frameWithKeypoints = cv2.drawKeypoints(frame,keypoints,-1,[0,0,255])
     results = np.concatenate((frame, frameWithKeypoints), axis=0)
     
-    out.write(frameWithKeypoints)
+    out.write(results)
 
     cv2.imshow('frame',results)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-cap.release()
+#cap.release()
 out.release()
 cv2.destroyAllWindows()

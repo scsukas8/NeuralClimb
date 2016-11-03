@@ -1,3 +1,5 @@
+#Utility file used for Neural Climb Project
+
 import matplotlib as plt
 import cv2
 from PIL import Image
