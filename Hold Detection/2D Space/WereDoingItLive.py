@@ -27,7 +27,8 @@ detector = buildDetector()
 
 
 while (cap.isOpened()):
-    
+    start = time.time()
+
     # Pull in frame from webcam
     retval, frame = cap.read()
     if retval == False:
@@ -49,6 +50,9 @@ while (cap.isOpened()):
     cv2.imshow('frame',results)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+
+    end = time.time()
+    print(end - start)
 
 cap.release()
 out.release()
