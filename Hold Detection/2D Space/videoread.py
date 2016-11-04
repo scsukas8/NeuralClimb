@@ -28,7 +28,7 @@ while (True):
     if frame == None:
         break
 
-
+    print 
 
     #Find keypoints
     keypoints, _ = findHolds(frame,detector)
@@ -38,6 +38,8 @@ while (True):
     frameWithKeypoints = cv2.drawKeypoints(frame,keypoints,-1,[0,0,255])
     results = np.concatenate((frame, frameWithKeypoints), axis=0)
     
+    print results.shape
+
     out.write(results)
 
     cv2.imshow('frame',results)

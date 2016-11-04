@@ -6,19 +6,17 @@ from mpl_toolkits.mplot3d import Axes3D
 import cv2
 from holdDetector import findHolds, findColors, plotColors
 
-cap = cv2.VideoCapture('C:/Users/SeanC/Documents/GitHub/NeuralClimb/Hold Detection/2D Space/drop.avi')
-
+cap = cv2.VideoCapture('C:/Users/SeanC/Documents/GitHub/NeuralClimb/Hold Detection/2D Space/TestVideo-clipped-converted.avi')
 
 
 while(cap.isOpened()):
     # Capture frame-by-frame
     ret, frame = cap.read()
+    if not ret:
+        break
 
     #Find keypoints
     keypoints, _ = findHolds(frame)
-
-    colors = findColors(frame,keypoints)
-
 
     im_with_keypoints = cv2.drawKeypoints(frame,keypoints,-1,[255,0,0])
     cv2.imshow('frame',im_with_keypoints)
