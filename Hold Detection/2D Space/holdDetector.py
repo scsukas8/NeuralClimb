@@ -38,19 +38,19 @@ def buildDetector():
 
     # Filter by Area.
     params.filterByArea = True
-    params.minArea = 20
+    params.minArea = 25
 
     # Filter by Circularity
     params.filterByCircularity = False
-    params.minCircularity = 0.01
+    params.minCircularity = 0.1
 
     # Filter by Convexity
     params.filterByConvexity = False
-    params.minConvexity = 0.01
+    params.minConvexity = 0.1
         
     # Filter by Inertia
-    params.filterByInertia = False
-    params.minInertiaRatio = 0.01
+    params.filterByInertia = True
+    params.minInertiaRatio = 0.25
 
     # Create a detector with the parameters
     ver = (cv2.__version__).split('.')
@@ -66,7 +66,7 @@ def findHolds(img,detector = None):
     # Applying a median blur removes some small impurities that
     # could fool the detection algorithm. It also smooths out the
     # color of each hold to make it more uniform.
-    img = cv2.medianBlur(img,3)
+    img = cv2.GaussianBlur(img, (5, 5), 0)
     #blur2 = cv2.medianBlur(blur,21)
 
     # Using Otsu's method, the optimal threshold for the image can be found.
