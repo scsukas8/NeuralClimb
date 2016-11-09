@@ -24,7 +24,7 @@ else:
 
 shape = (x,y)
 
-codec = cv2.cv.CV_FOURCC('Y','V','1','2')
+#codec = cv2.cv.CV_FOURCC('Y','V','1','2')
 out = cv2.VideoWriter(path[:-4] + '-out.avi',-1, 30.0, shape,True)
 
 
@@ -58,19 +58,3 @@ while(cap.isOpened()):
 out.release()
 cap.release()
 cv2.destroyAllWindows()
-
-
-
-
-def getShape(capture):
-    ret, frame = cap.read()
-    shape = frame.shape[::-1]
-    if shape[0] > shape[1]:
-        axis = 1
-        shape[1] = shape[1] * 2
-    else:
-        axis = 0
-        shape[0] = shape[0] * 2
-
-    return (axis, shape)
-
