@@ -28,7 +28,7 @@ while(cap.isOpened()):
 
 
     frameWithKeypoints = cv2.drawKeypoints(frame,keypoints,-1,[0,0,255])
-    #cv2.drawContours(frame,hulls,-1,[255,0,0])
+    cv2.drawContours(frame,hulls,-1,[255,0,0])
     results = np.concatenate((frame, frameWithKeypoints), axis=0)
 
  
