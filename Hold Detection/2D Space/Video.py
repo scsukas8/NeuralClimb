@@ -7,11 +7,13 @@ import cv2
 from holdDetector import findHolds, findColors, plotColors
 
 
+# Starting path
+path = 'C:/Users/SeanC/Documents/GitHub/NeuralClimb/Hold Detection/2D Space/Test1-converted.avi'
 
-path = 'C:/Users/SeanC/Documents/GitHub/NeuralClimb/Hold Detection/2D Space/Test3-converted.avi'
+# Open capture
 cap = cv2.VideoCapture(path)
 
-
+# Find dimensions of capture for output video
 ret, frame = cap.read()
 y,x,ch = frame.shape
 outShape = (0,0)
@@ -21,9 +23,9 @@ if x > y:
 else:
     axis = 1
     x *= 2
-
 shape = (x,y)
 
+# Open VideoWriter object
 #codec = cv2.cv.CV_FOURCC('Y','V','1','2')
 out = cv2.VideoWriter(path[:-4] + '-out.avi',-1, 30.0, shape,True)
 
@@ -35,7 +37,7 @@ while(cap.isOpened()):
     if not ret:
         break
 
-    #Find keypoints
+    # Find keypoints
     keypoints, hulls = findHolds(frame)
 
 
