@@ -67,10 +67,8 @@ def findHolds(img,detector = None):
     # could fool the detection algorithm. It also smooths out the
     # color of each hold to make it more uniform.
     img = cv2.GaussianBlur(img, (5, 5), 0)
-    #blur2 = cv2.medianBlur(blur,21)
 
     # Using Otsu's method, the optimal threshold for the image can be found.
-    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     otsu, _ = cv2.threshold(gray,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
     # Applys edge detection to find the borders between the hold and the wall
@@ -78,18 +76,11 @@ def findHolds(img,detector = None):
     # lower:upper ratio of 1:2. L2gradient is included for more precise results.
 
     edges = cv2.Canny(img,otsu/2, otsu, L2gradient = True)
-    #edges2 = cv2.Canny(img,100 ,200, L2gradient = True)
 
 
 
     # Finds the contours of the image, without retaining the hierarchy
     contours1, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
-    #contours2, _ = cv2.findContours(edges2,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
-
-    #cnt = contours1 + contours2
-
-    # Remove contours that are too small or have too few points.
-    #cnt = [x for x in cnt if x.size > 5]
 
     # Applies convex hulls to each contour, ensuring each contour
     # is a closed polygon.
