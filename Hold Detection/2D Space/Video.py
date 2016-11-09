@@ -11,8 +11,22 @@ from holdDetector import findHolds, findColors, plotColors
 path = 'C:/Users/SeanC/Documents/GitHub/NeuralClimb/Hold Detection/2D Space/Test3-converted.avi'
 cap = cv2.VideoCapture(path)
 
+
+ret, frame = cap.read()
+y,x,ch = frame.shape
+outShape = (0,0)
+if x > y:
+    axis = 0
+    y *= 2
+else:
+    axis = 1
+    x *= 2
+
+shape = (x,y)
+
 codec = cv2.cv.CV_FOURCC('Y','V','1','2')
-out = cv2.VideoWriter(path[:-4] + '-out.avi',codec, 30.0, (568,640),True)
+out = cv2.VideoWriter(path[:-4] + '-out.avi',-1, 30.0, shape,True)
+
 
 
 while(cap.isOpened()):
@@ -26,9 +40,8 @@ while(cap.isOpened()):
 
 
     frameWithKeypoints = cv2.drawKeypoints(frame,keypoints,-1,[0,0,255])
-    cv2.drawContours(frame,hulls,-1,[255,0,0])
-    results = np.concatenate((frame, frameWithKeypoints), axis=0)
- 
+    cv2.drawContours(frame,hulls,-1,[0,0,255])
+    results = np.concatenate((frame, frameWithKeypoints), axis=axis)
 
     # Write image to video out
     out.write(results)  
@@ -45,3 +58,19 @@ while(cap.isOpened()):
 out.release()
 cap.release()
 cv2.destroyAllWindows()
+
+
+
+
+def getShape(capture):
+    ret, frame = cap.read()
+    shape = frame.shape[::-1]
+    if shape[0] > shape[1]:
+        axis = 1
+        shape[1] = shape[1] * 2
+    else:
+        axis = 0
+        shape[0] = shape[0] * 2
+
+    return (axis, shape)
+
