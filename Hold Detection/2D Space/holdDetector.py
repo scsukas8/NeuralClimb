@@ -69,15 +69,13 @@ def findHolds(img,detector = None):
     img = cv2.GaussianBlur(img, (5, 5), 0)
 
     # Using Otsu's method, the optimal threshold for the image can be found.
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     otsu, _ = cv2.threshold(gray,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
     # Applys edge detection to find the borders between the hold and the wall
     # Otsu's threshold is intended to be used as the higher threshold with a
     # lower:upper ratio of 1:2. L2gradient is included for more precise results.
-
     edges = cv2.Canny(img,otsu/2, otsu, L2gradient = True)
-
-
 
     # Finds the contours of the image, without retaining the hierarchy
     contours1, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
