@@ -63,10 +63,10 @@ def buildDetector():
 
 
 def findHolds(img,detector = None):
-    # Applying a median blur removes some small impurities that
+    # Applying a gaussian blur removes some small impurities that
     # could fool the detection algorithm. It also smooths out the
     # color of each hold to make it more uniform.
-    img = cv2.medianBlur(img,3)
+    img = cv2.GaussianBlur(img, (5, 5), 0)
     #blur2 = cv2.medianBlur(blur,21)
 
     # Using Otsu's method, the optimal threshold for the image can be found.
