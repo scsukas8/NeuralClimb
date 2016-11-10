@@ -78,42 +78,16 @@ def findHolds(img,detector = None):
     edges = cv2.Canny(img,otsu/2, otsu, L2gradient = True)
 
     # Finds the contours of the image, without retaining the hierarchy
-    contours1, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
     # Applies convex hulls to each contour, ensuring each contour
     # is a closed polygon.
-    hulls = map(cv2.convexHull,contours1)
+    hulls = map(cv2.convexHull,contours)
 
     # Draws contours onto a blank canvas
     mask = np.zeros(img.shape,np.uint8)
-    cv2.drawContours(mask,hulls,-1,[255,0,0])
+    cv2.drawContours(mask,hulls,-1,[255,255,255])
 
-    """
-    #Uncomment this to display the image results of each step.
-    #######################################
-    #OpenCV uses BGR format, so that'll need to be reversed for display
-    fig = plt.figure(5)
-    imsho = edges
-    cv2.imshow("Edges",edges)
-
-    mas = np.zeros(img.shape,np.uint8)
-    cv2.drawContours(mas,cnt,-1,[255,0,0])
-
-    #OpenCV uses BGR format, so that'll need to be reversed for display
-    imsho = mas[...,::-1]
-
-    # Display the resulting frame
-    fig = plt.figure(6)
-    plt.imshow(imsho)
-    plt.title("Contours")
-
-    imsho = mask[...,::-1]
-    fig = plt.figure(7)
-    plt.imshow(imsho)
-    plt.title("Hulls")
-    fig = plt.figure(8)
-    #######################################
-    """
     if detector == None:
         # Set up the detector with default parameters.
         detector = buildDetector()
