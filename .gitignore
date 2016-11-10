@@ -1,0 +1,10 @@
+# Byte-compiled
+*.pyc
+*$py.class
+
+# Videos
+*.avi
+*.mp4
+*.mov
+*.wmv
+webcam/
