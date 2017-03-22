@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-from util import openFile, showim
+from util import openFile, showImage
 import colorsys
 from mpl_toolkits.mplot3d import Axes3D
 
