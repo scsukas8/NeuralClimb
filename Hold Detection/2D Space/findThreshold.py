@@ -2,15 +2,15 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-from util import openFile, showImage
+from util import *
 from holdDetector import buildDetector
 
 
-imgOrig = grab_from_file()
+ret, imgOrig = grab_from_file()
 gray = cv2.cvtColor(imgOrig,cv2.COLOR_BGR2GRAY)
 detector = buildDetector()
 
-th = 50
+th = 150
 def draw(img, keypoints):
     # Draw detected blobs as red circles.
     # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the 
@@ -30,7 +30,21 @@ def draw(img, keypoints):
     img = img[...,::-1]
 
 
+cv2.imshow("Fig",gray)
+
 while 1:
+
+    k = cv2.waitKey()
+    print k
+    print ord('p')
+
+    if k == ord('q') or k == -1:
+        break
+    elif k == ord('p'):
+        th = th + 10
+    elif k == ord('m'):
+        th = th - 10
+
     img = imgOrig.copy()
 
     edges = cv2.Canny(img,th, th * 1.2, L2gradient = True)
@@ -58,14 +72,14 @@ while 1:
     print th
 
     draw(img,keypoints)
-    cv2.imshow('Fig',img)
+    cv2.putText(img, "Threshold = {}".format(th),
+        (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255),2)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-    elif cv2.waitKey(1) & 0xFF == ord('p'):
-        th= th + 10
-    elif cv2.waitKey(1) & 0xFF == ord('m'):
-        th= th - 10
+    cv2.imshow("Fig",img)
+
+    
+
+    
 
 
 
