@@ -7,27 +7,22 @@ import colorsys
 from mpl_toolkits.mplot3d import Axes3D
 
 
-
-
 def openImage():
     # Open Image
     file_path = openFile()
     img = cv2.imread(file_path,1)
 
-    # Image can be resized to a resonable size to fit screen and
-    # speed up processing.
-    #c = 1000.0/img.shape[0]
-    #x = int(img.shape[0] * c)
-    #y = int(img.shape[1] * c)
-    #img = cv2.resize(img, (y,x))
-
-
+    # Image can be resized to a standard size to speed up processing.
+    c = 1000.0/img.shape[0]
+    x = int(img.shape[0] * c)
+    y = int(img.shape[1] * c)
+    img = cv2.resize(img, (y,x))
 
     return img
 
 """ Object detection """
 
-def buildDetector():
+def buildDetector(minArea = 25):
     # Setup SimpleBlobDetector parameters.
     params = cv2.SimpleBlobDetector_Params()
 
@@ -38,7 +33,7 @@ def buildDetector():
 
     # Filter by Area.
     params.filterByArea = True
-    params.minArea = 25
+    params.minArea = minArea
 
     # Filter by Circularity
     params.filterByCircularity = False
@@ -75,7 +70,8 @@ def findHolds(img,detector = None):
     # Applys edge detection to find the borders between the hold and the wall
     # Otsu's threshold is intended to be used as the higher threshold with a
     # lower:upper ratio of 1:2. L2gradient is included for more precise results.
-    edges = cv2.Canny(img,otsu/2, otsu, L2gradient = True)
+    edges = cv2.Canny(img,otsu, otsu * 2, L2gradient = True)
+    print otsu
 
     # Finds the contours of the image, without retaining the hierarchy
     contours, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
@@ -86,7 +82,9 @@ def findHolds(img,detector = None):
 
     # Draws contours onto a blank canvas
     mask = np.zeros(img.shape,np.uint8)
-    cv2.drawContours(mask,hulls,-1,[255,255,255])
+    cv2.drawContours(mask,hulls,-1,[255,255,255],-1)
+
+    showim('mask',mask)
 
     if detector == None:
         # Set up the detector with default parameters.
