@@ -5,10 +5,12 @@ import holdDetector as hd
 #Open dialog to select image
 img = hd.openImage()
 
+# Set initial detector parameters
+hd.buildDetector(minArea = 500)
+
 # Finds each hold. Returns keypoints for each hold
 # and the points that define the contours of each hold
 holds, contours = hd.findHolds(img)
-
 
 #Finds a color associated with each keypoint
 colors = hd.findColors(img,holds)
