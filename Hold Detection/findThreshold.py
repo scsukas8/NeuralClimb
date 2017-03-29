@@ -8,6 +8,8 @@ from holdDetector import buildDetector
 
 ret, imgOrig = grab_from_file()
 gray = cv2.cvtColor(imgOrig,cv2.COLOR_BGR2GRAY)
+gray = resize(imgOrig,750)
+
 detector = buildDetector()
 
 th = 150
@@ -35,8 +37,6 @@ cv2.imshow("Fig",gray)
 while 1:
 
     k = cv2.waitKey()
-    print k
-    print ord('p')
 
     if k == ord('q') or k == -1:
         break
@@ -45,9 +45,9 @@ while 1:
     elif k == ord('m'):
         th = th - 10
 
-    img = imgOrig.copy()
+    img = gray.copy()
 
-    edges = cv2.Canny(img,th, th * 1.2, L2gradient = True)
+    edges = cv2.Canny(img,th, th * 2, L2gradient = False)
 
     contours, _ = cv2.findContours(edges,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
@@ -64,9 +64,6 @@ while 1:
         detector = buildDetector()
 
     keypoints = detector.detect(mask)
-
-
-
 
 
     print th
