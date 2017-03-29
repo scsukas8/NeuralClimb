@@ -45,8 +45,13 @@ def grab_from_file(file_path = None):
 
     return (retval, frame)
 
-def resize(image):
-    image = cv2.resize(img, (y,x))
+def resize(image, y = 0, x = 0):
+    if y == 0:
+        return image
+    if x == 0:
+        r, c, _ = image.shape
+        x = y * c / r;
+    image = cv2.resize(image, (y,x))
     return image
 
 def showImage(image, title = "Image"):
