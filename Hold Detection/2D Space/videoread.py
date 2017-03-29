@@ -28,7 +28,7 @@ while (True):
     if frame == None:
         break
 
-    print 
+ 
 
     #Find keypoints
     keypoints, _ = findHolds(frame,detector)
