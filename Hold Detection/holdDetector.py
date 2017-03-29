@@ -45,7 +45,7 @@ def buildDetector(minArea = 25):
         
     # Filter by Inertia
     params.filterByInertia = True
-    params.minInertiaRatio = 0.25
+    params.minInertiaRatio = 0.05
 
     # Create a detector with the parameters
     ver = (cv2.__version__).split('.')
@@ -84,7 +84,7 @@ def findHolds(img,detector = None):
     mask = np.zeros(img.shape,np.uint8)
     cv2.drawContours(mask,hulls,-1,[255,255,255],-1)
 
-    showim('mask',mask)
+    showImage(mask)
 
     if detector == None:
         # Set up the detector with default parameters.
