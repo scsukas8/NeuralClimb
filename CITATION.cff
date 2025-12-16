@@ -1,0 +1,14 @@
+cff-version: "1.2.0"
+message: "If you use this software, please cite it using the metadata from this file."
+authors:
+  - given-names: Sean
+    family-names: Csukas
+title: "NeuralClimb"
+version: "0.1"
+date-released: "2016-12-15"
+repository-code: "https://github.com/SeanCsukas/NeuralClimb"
+keywords:
+  - [Climbing]
+  - [Rock Climbing]
+  - [Computer Vision]
+  - [Machine Learning]
